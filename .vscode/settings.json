@@ -1,0 +1,5 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "/home/jack/.local/share/virtualenvs/Skunkworks-iaS2MHpm/bin/python"
+}
