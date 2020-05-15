@@ -9,6 +9,7 @@ pylint = "*"
 [packages]
 requests = "*"
 pylint = "*"
+tweepy = "*"
 
 [requires]
 python_version = "3.8"
