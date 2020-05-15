@@ -35,7 +35,11 @@ class TwitterAPI:
     def get_api(self):
         return self.api
 
+    def search_tweets(self, queries, count=10, lang='en'):
+        for tweet in self.api.search(q=queries, count=count, lang=lang):
+            print(f"{tweet.user.name}:{tweet.text}")
+
 
 if __name__ == "__main__":
     api = TwitterAPI()
-    print(api.get_api())
+    api.search_tweets('pizza')
