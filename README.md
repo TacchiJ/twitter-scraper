@@ -1,5 +1,5 @@
 # Skunkworks
-# TODO: write overview
+TODO: overview
 
 
 # Chatbot
