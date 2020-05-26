@@ -1,45 +1,37 @@
 import os
 import logging
-import tweepy
 import asyncio
-import requests
 
 from typing import Optional, Any, Dict
+from twitter_api import TwitterAPI
 
 logger = logging.getLogger()
 
-class TwitterAPI:
 
-    def __init__(self):
-        # Get credentials
-        CONSUMER_KEY = os.getenv('TWITTER_KEY')
-        CONSUMER_SECRET = os.getenv('TWITTER_SECRET_KEY')
-        ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
-        ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
-
-        # Authenticate to Twitter
-        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-        auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-
-        # Create API object
-        api = tweepy.API(auth, wait_on_rate_limit=True, 
-                wait_on_rate_limit_notify=True)
-        try:
-            api.verify_credentials()
-        except Exception as e:
-            logger.error("Error creating API", exc_info=True)
-            raise e
-        logger.info("API created")
-        self.api = api
-
-    def get_api(self):
-        return self.api
-
-    def search_tweets(self, queries, count=10, lang='en'):
-        for tweet in self.api.search(q=queries, count=count, lang=lang):
-            print(f"{tweet.user.name}:{tweet.text}")
-
+def unpack_tweets(tweets):
+    unpacked_tweets = {}
+    for entry in tweets:
+        for q in entry:
+            unpacked_tweets[q] = entry[q]
+    return unpacked_tweets
 
 if __name__ == "__main__":
-    api = TwitterAPI()
-    api.search_tweets('pizza')
+    # Get credentials
+    consumer_key = os.getenv('TWITTER_KEY')
+    consumer_secret = os.getenv('TWITTER_SECRET_KEY')
+    access_token = os.getenv('TWITTER_ACCESS_TOKEN')
+    access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
+
+    # Create API
+    api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
+    
+    # Get tweets
+    queries = ['pizza', 'virus', 'corona']
+    loop = asyncio.get_event_loop()
+    tweets = loop.run_until_complete(api.get_tweets(queries))
+    loop.close()
+    tweets = unpack_tweets(tweets)
+
+    for query in tweets.values():
+        for tweet in query:
+            print(tweet)
