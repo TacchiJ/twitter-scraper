@@ -42,7 +42,6 @@ class TwitterAPI:
     async def search_tweets(self, query, n, lang):
         tweets = []
         for tweet in self.api.search(q=query, count=n, lang=lang):
-            print(f"{tweet.text}")
             tweets.append([tweet.user.name, tweet.text])
         return {query: tweets}
             

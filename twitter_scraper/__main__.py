@@ -8,6 +8,12 @@ from twitter_api import TwitterAPI
 logger = logging.getLogger()
 
 
+def get_tweets_from_api(api, queries):
+    loop = asyncio.get_event_loop()
+    tweets = loop.run_until_complete(api.get_tweets(queries))
+    loop.close()
+    return unpack_tweets(tweets)
+
 def unpack_tweets(tweets):
     unpacked_tweets = {}
     for entry in tweets:
@@ -27,11 +33,9 @@ if __name__ == "__main__":
     
     # Get tweets
     queries = ['pizza', 'virus', 'corona']
-    loop = asyncio.get_event_loop()
-    tweets = loop.run_until_complete(api.get_tweets(queries))
-    loop.close()
-    tweets = unpack_tweets(tweets)
+    tweets = get_tweets_from_api(api, queries)
 
+    # Test output
     for query in tweets.values():
         for tweet in query:
             print(tweet)
