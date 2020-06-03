@@ -7,6 +7,10 @@ verify_ssl = true
 pylint = "*"
 
 [packages]
+requests = "*"
+pylint = "*"
+tweepy = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.8"
