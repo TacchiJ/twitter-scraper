@@ -1,4 +1,5 @@
 import os
+import csv
 import logging
 import asyncio
 
@@ -12,14 +13,7 @@ def get_tweets_from_api(api, queries):
     loop = asyncio.get_event_loop()
     tweets = loop.run_until_complete(api.get_tweets(queries))
     loop.close()
-    return unpack_tweets(tweets)
-
-def unpack_tweets(tweets):
-    unpacked_tweets = {}
-    for entry in tweets:
-        for q in entry:
-            unpacked_tweets[q] = entry[q]
-    return unpacked_tweets
+    return tweets
 
 if __name__ == "__main__":
     # Get credentials
@@ -35,7 +29,16 @@ if __name__ == "__main__":
     queries = ['pizza', 'virus', 'corona']
     tweets = get_tweets_from_api(api, queries)
 
-    # Test output
-    for query in tweets.values():
-        for tweet in query:
-            print(tweet)
+    # Local output
+    if bool(os.getenv('WRITE_LOCAL')) is True:
+        with open ('local_output/test_output.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            tweet_contents = api.get_tweet_contents()
+            writer.writerow(tweet_contents)
+
+            for query_tweets in tweets:
+                for tweet in query_tweets:
+                    writer.writerow(tweet)
+
+                    
+    
