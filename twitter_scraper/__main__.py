@@ -42,8 +42,7 @@ if __name__ == "__main__":
                     writer.writerow(tweet)
 
     # S3 output
-    # else:
-    if True:
+    else:
         s3 = boto3.resource('s3')
         bucket = s3.Bucket(os.getenv('BUCKET_NAME'))
 
@@ -56,5 +55,5 @@ if __name__ == "__main__":
                 for tweet in query_tweets:
                     writer.writerow(tweet)
 
-        bucket.upload_file('s3_output.csv', os.getenv('BUCKET_PATH'))                   
+        bucket.upload_file('s3_output.csv', os.getenv('BUCKET_KEY'))                   
     
