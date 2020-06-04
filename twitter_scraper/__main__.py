@@ -1,4 +1,5 @@
 import os
+import boto3
 import csv
 import logging
 import asyncio
@@ -40,5 +41,20 @@ if __name__ == "__main__":
                 for tweet in query_tweets:
                     writer.writerow(tweet)
 
-                    
+    # S3 output
+    # else:
+    if True:
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket(os.getenv('BUCKET_NAME'))
+
+        with open ('s3_output.csv', 'w', newline='') as outfile:
+            writer = csv.writer(outfile, delimiter=',')
+            tweet_contents = api.get_tweet_contents()
+            writer.writerow(tweet_contents)
+
+            for query_tweets in tweets:
+                for tweet in query_tweets:
+                    writer.writerow(tweet)
+
+        bucket.upload_file('s3_output.csv', os.getenv('BUCKET_PATH'))                   
     
