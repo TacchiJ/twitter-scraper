@@ -27,9 +27,15 @@ class TwitterAPI:
             raise e
         logger.info("API created")
         self.api = api
+        
+        # Initialize header
+        self.tweet_contents = ['query', 'user.name', 'text']
 
     def get_api(self):
         return self.api
+
+    def get_tweet_contents(self):
+        return self.tweet_contents
 
     async def get_tweets(self, queries, n=10, lang='en'):
         tasks = []
@@ -42,6 +48,21 @@ class TwitterAPI:
     async def search_tweets(self, query, n, lang):
         tweets = []
         for tweet in self.api.search(q=query, count=n, lang=lang):
-            tweets.append([tweet.user.name, tweet.text])
-        return {query: tweets}
-            
+            data = [query]
+            for field in self.tweet_contents[1:]:
+                data.append(self.get_attribute(tweet, field))
+            tweets.append(data)
+        return tweets
+
+    # Recursively retrieves attributes and child attributes of an object 
+    def get_attribute(self, obj, attr):
+        if '.' in attr:
+            attrs = attr.split('.')
+            child_attr = getattr(obj, attrs[0])
+            return self.get_attribute(child_attr, attrs[1])
+        try:
+            return getattr(obj, attr)
+        except AttributeError:
+            logger.error(f"Attribute not found: {attr}")
+            return ''
+    
