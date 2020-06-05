@@ -1,11 +1,11 @@
-import os
+import asyncio
 import boto3
 import csv
 import logging
-import asyncio
+import os
 
-from typing import Optional, Any, Dict
 from twitter_api import TwitterAPI
+from typing import Optional, Any, Dict
 
 logger = logging.getLogger()
 
@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     # Local output
     if os.getenv('ENV') == 'dev':
-        with open ('local_output/twitter_data.csv', 'w', newline='') as csvfile:
+        with open (os.getenv('LOCAL_FILENAME'), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             tweet_contents = api.get_tweet_contents()
             writer.writerow(tweet_contents)
@@ -40,6 +40,8 @@ if __name__ == "__main__":
             for query_tweets in tweets:
                 for tweet in query_tweets:
                     writer.writerow(tweet)
+        
+        print('Local upload successful')
 
     # S3 output
     else:
@@ -55,4 +57,6 @@ if __name__ == "__main__":
                 for tweet in query_tweets:
                     writer.writerow(tweet)
 
-        bucket.upload_file('s3_output.csv', os.getenv('BUCKET_KEY'))                   
+        bucket.upload_file('s3_output.csv', os.getenv('BUCKET_KEY'))
+        print('S3 upload successful')
+
