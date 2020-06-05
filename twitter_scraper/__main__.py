@@ -31,8 +31,8 @@ if __name__ == "__main__":
     tweets = get_tweets_from_api(api, queries)
 
     # Local output
-    if bool(os.getenv('WRITE_LOCAL')) is True:
-        with open ('local_output/test_output.csv', 'w', newline='') as csvfile:
+    if os.getenv('ENV') == 'dev':
+        with open ('local_output/twitter_data.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             tweet_contents = api.get_tweet_contents()
             writer.writerow(tweet_contents)
