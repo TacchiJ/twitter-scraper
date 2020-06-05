@@ -9,28 +9,22 @@ logger = logging.getLogger()
 
 if __name__ == "__main__":
     tweets = []
-    header = []
 
     # Get local data
     if os.getenv('ENV') == 'dev':
-        with open(os.getenv('LOCAL_FILENAME'), newline='') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',')
-            header = next(reader)
-            for row in reader:
-                entry = {}
-                for i in range(len(header)):
-                    entry[header[i]] = row[i]
-                tweets.append(entry)
+        tweets = pd.read_csv(os.getenv('LOCAL_FILENAME'))
+        print('Local read successful')
 
     # Get S3 data
     else:
-        s3 = boto3.resource('s3')
+        s3 = boto3.client('s3')
         bucket = os.getenv('BUCKET_NAME')
         key = os.getenv('BUCKET_KEY')
         obj = s3.get_object(Bucket=bucket, Key=key)
+        tweets = pd.read_csv(obj['Body'])
+        print('S3 read successful')
 
-    tweet_data = pd.DataFrame(tweets, columns=header)
-    print(tweet_data)
+    # print(tweets)
 
     # TF-IDF
     # Sentiment Analysis
