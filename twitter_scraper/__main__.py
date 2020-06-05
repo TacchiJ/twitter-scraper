@@ -56,4 +56,3 @@ if __name__ == "__main__":
                     writer.writerow(tweet)
 
         bucket.upload_file('s3_output.csv', os.getenv('BUCKET_KEY'))                   
-    
