@@ -85,6 +85,11 @@ if __name__ == "__main__":
         tweets = pd.read_csv(obj['Body'])
         print('S3 read successful')
 
+
+
+    # TODO: separate the code into three different files
+    ### CLEANING ###
+
     # Get training data
     positive_tweets = twitter_samples.strings('positive_tweets.json')
     negative_tweets = twitter_samples.strings('negative_tweets.json')
@@ -107,6 +112,12 @@ if __name__ == "__main__":
     # Convert data to NLTK-required format
     positive_dataset = get_dataset_from_tokens(positive_cleaned_tokens, "Positive")
     negative_dataset = get_dataset_from_tokens(negative_cleaned_tokens, "Negative")
+    
+    
+    
+    
+    ### ANALYSIS ###
+
     dataset = positive_dataset + negative_dataset
 
     # Split data
