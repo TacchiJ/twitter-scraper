@@ -4,7 +4,9 @@ import csv
 import logging
 import os
 
+from inport_export import InporterExporter
 from twitter_api import TwitterAPI
+
 from typing import Optional, Any, Dict
 
 logger = logging.getLogger()
@@ -12,10 +14,11 @@ logger = logging.getLogger()
 
 def get_tweets_from_api(api, queries):
     loop = asyncio.get_event_loop()
-    tweets = loop.run_until_complete(api.get_tweets(queries))
+    queries = loop.run_until_complete(api.get_tweets(queries))
     loop.close()
+    tweets = [tweet for query in queries for tweet in query]
     return tweets
-    
+
 
 if __name__ == "__main__":
     # Get credentials
@@ -31,18 +34,15 @@ if __name__ == "__main__":
     queries = ['pizza', 'virus', 'corona']
     tweets = get_tweets_from_api(api, queries)
 
+    # Outputs
+    inporter_exporter = InporterExporter()
+
     # Local output
     if os.getenv('ENV') == 'dev':
-        with open (os.getenv('LOCAL_FILENAME'), 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',')
-            tweet_contents = api.get_tweet_contents()
-            writer.writerow(tweet_contents)
-
-            for query_tweets in tweets:
-                for tweet in query_tweets:
-                    writer.writerow(tweet)
+        filename = os.getenv('LOCAL_FILENAME')
+        header = api.get_tweet_contents()
+        inporter_exporter.local_export(filename, header=header, data=tweets)
         
-        print('Local upload successful')
 
     # S3 output
     else:
