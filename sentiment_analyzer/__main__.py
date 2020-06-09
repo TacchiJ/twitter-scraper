@@ -4,9 +4,13 @@ import logging
 import nltk
 import os
 import pandas as pd
+import random
 import re
 import string
 
+from nltk import FreqDist
+from nltk import classify
+from nltk import NaiveBayesClassifier
 from nltk.corpus import stopwords
 from nltk.corpus import twitter_samples
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -50,6 +54,19 @@ def remove_noise(all_tweet_tokens: list, stop_words=()):
 
     return all_cleaned_tokens
 
+def get_all_words(cleaned_tokens: list):
+    for tokens in cleaned_tokens:
+        for token in tokens:
+            yield token
+
+def get_dataset_from_tokens(cleaned_tokens: list, tag: str):
+    dataset = []
+    for tweet_tokens in cleaned_tokens:
+        bag_of_tokens = {token: True for token in tweet_tokens}
+        dataset.append((bag_of_tokens, tag))
+    return dataset
+
+
 if __name__ == "__main__":
     # run_downloads()
     tweets = []
@@ -71,7 +88,6 @@ if __name__ == "__main__":
     # Get training data
     positive_tweets = twitter_samples.strings('positive_tweets.json')
     negative_tweets = twitter_samples.strings('negative_tweets.json')
-    text = twitter_samples.strings('tweets.20150430-223406.json')
 
     # Get tokenized training data
     positive_tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
@@ -82,10 +98,34 @@ if __name__ == "__main__":
     positive_cleaned_tokens = remove_noise(positive_tweet_tokens, stop_words)
     negative_cleaned_tokens = remove_noise(negative_tweet_tokens, stop_words)
 
+    # Word frequency distributions
+    all_positive_words = get_all_words(positive_cleaned_tokens)
+    all_negative_words = get_all_words(negative_cleaned_tokens)
+    positive_freq_dist = FreqDist(all_positive_words)
+    negative_freq_dist = FreqDist(all_negative_words)
 
-    print(positive_cleaned_tokens[:2])
-    print()
-    print(negative_cleaned_tokens[:2])
+    # Convert data to NLTK-required format
+    positive_dataset = get_dataset_from_tokens(positive_cleaned_tokens, "Positive")
+    negative_dataset = get_dataset_from_tokens(negative_cleaned_tokens, "Negative")
+    dataset = positive_dataset + negative_dataset
+
+    # Split data
+    split_ratio = 0.7
+    split = int(len(dataset) * split_ratio)
+    
+    random.shuffle(dataset)
+    train_data = dataset[slice(0, split)]
+    test_data = dataset[slice(split, len(dataset))]
+
+    print(len(dataset))
+    print(len(train_data))
+    print(len(test_data))
+
+    # Build model
+    classifier = NaiveBayesClassifier.train(train_data)
+    print(f"Accuracy is: {classify.accuracy(classifier, test_data)}")
+    print(classifier.show_most_informative_features(10))
+
 
 
 
