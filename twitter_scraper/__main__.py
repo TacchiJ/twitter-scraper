@@ -1,10 +1,9 @@
 import asyncio
-import boto3
 import csv
 import logging
 import os
 
-from inport_export import InporterExporter
+from import_export import ImporterExporter
 from twitter_api import TwitterAPI
 
 from typing import Optional, Any, Dict
@@ -21,43 +20,31 @@ def get_tweets_from_api(api, queries):
 
 
 if __name__ == "__main__":
+
     # Get credentials
     consumer_key = os.getenv('TWITTER_KEY')
     consumer_secret = os.getenv('TWITTER_SECRET_KEY')
     access_token = os.getenv('TWITTER_ACCESS_TOKEN')
     access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
 
-    # Create API
-    api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
-    
     # Get tweets
+    api = TwitterAPI(consumer_key, consumer_secret, access_token, access_token_secret)
     queries = ['pizza', 'virus', 'corona']
     tweets = get_tweets_from_api(api, queries)
 
-    # Outputs
-    inporter_exporter = InporterExporter()
+    # Export data
+    importer_exporter = ImporterExporter()
 
-    # Local output
+    # Local
     if os.getenv('ENV') == 'dev':
         filename = os.getenv('LOCAL_FILENAME')
         header = api.get_tweet_contents()
-        inporter_exporter.local_export(filename, header=header, data=tweets)
+        importer_exporter.local_export(filename, header=header, data=tweets)
         
-
-    # S3 output
+    # S3
     else:
-        s3 = boto3.resource('s3')
-        bucket = s3.Bucket(os.getenv('BUCKET_NAME'))
-
-        with open ('s3_output.csv', 'w', newline='') as outfile:
-            writer = csv.writer(outfile, delimiter=',')
-            tweet_contents = api.get_tweet_contents()
-            writer.writerow(tweet_contents)
-
-            for query_tweets in tweets:
-                for tweet in query_tweets:
-                    writer.writerow(tweet)
-
-        bucket.upload_file('s3_output.csv', os.getenv('BUCKET_KEY'))
-        print('S3 upload successful')
-
+        filename = os.getenv('S3_FILENAME')
+        bucket_name = os.getenv('BUCKET_NAME')
+        bucket_key = os.getenv('BUCKET_KEY')
+        header = api.get_tweet_contents()
+        importer_exporter.s3_export(filename, bucket_name, bucket_key, header=header, data=tweets)
