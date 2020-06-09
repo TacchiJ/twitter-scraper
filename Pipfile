@@ -12,6 +12,8 @@ pylint = "*"
 tweepy = "*"
 pandas = "*"
 boto3 = "*"
+spacy = "*"
+nltk = "*"
 
 [requires]
 python_version = "3.8"
