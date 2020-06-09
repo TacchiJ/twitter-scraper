@@ -15,6 +15,7 @@ def get_tweets_from_api(api, queries):
     tweets = loop.run_until_complete(api.get_tweets(queries))
     loop.close()
     return tweets
+    
 
 if __name__ == "__main__":
     # Get credentials
