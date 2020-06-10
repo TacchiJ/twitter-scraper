@@ -3,6 +3,7 @@ import logging
 import os
 import pandas as pd
 import requests
+import datetime
 import tweepy
 
 from typing import Optional, Any, Dict
@@ -25,10 +26,11 @@ class TwitterAPI:
         except Exception as e:
             logger.error("Error creating API", exc_info=True)
             raise e
-        logger.info("API created")
+        now = datetime.datetime.now().time()
+        print(f"{now}: Twitter API created")
         self.api = api
         
-        # Initialize header
+        # Initialize header contents
         self.tweet_contents = ['query', 'user.name', 'text']
 
     def get_api(self):
@@ -46,6 +48,8 @@ class TwitterAPI:
 
     # Searches for most recent tweets
     async def search_tweets(self, query, n, lang):
+        now = datetime.datetime.now().time()
+        print(f"{now}: Searching for '{query}'")
         tweets = []
         for tweet in self.api.search(q=query, count=n, lang=lang):
             data = [query]

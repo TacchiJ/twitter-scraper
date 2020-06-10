@@ -10,7 +10,7 @@ from nltk import classify
 from nltk import NaiveBayesClassifier
 from nltk.corpus import twitter_samples
 
-sys.path.insert(1, 'twitter_scraper')
+sys.path.insert(1, '')
 from tweet_cleaner import TweetCleaner
 from import_export import ImporterExporter
 

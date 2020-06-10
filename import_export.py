@@ -1,5 +1,6 @@
 import boto3
 import csv
+import datetime
 import os
 import pandas as pd
 
@@ -15,7 +16,8 @@ class ImporterExporter:
 
     def local_import(self):
         tweets = pd.read_csv(os.getenv('LOCAL_FILENAME'))
-        print('Local read successful')
+        now = datetime.datetime.now().time()
+        print(f"{now}: Local read successful")
         return tweets
 
     def s3_import(self):
@@ -24,7 +26,8 @@ class ImporterExporter:
         key = os.getenv('BUCKET_KEY')
         obj = s3.get_object(Bucket=bucket, Key=key)
         tweets = pd.read_csv(obj['Body'])
-        print('S3 read successful')
+        now = datetime.datetime.now().time()
+        print(f"{now}: S3 read successful")
         return tweets
 
     # Exports #
@@ -35,8 +38,8 @@ class ImporterExporter:
                 writer.writerow(header) 
             for row in data:
                 writer.writerow(row)
-
-        print('Local upload successful')
+        now = datetime.datetime.now().time()
+        print(f"{now}: Local upload successful")
 
     def s3_export(self, filename: str, bucket_name: str, bucket_key:str, header=[], data=[]):
         s3 = boto3.resource('s3')
@@ -49,5 +52,5 @@ class ImporterExporter:
             for row in data:
                 writer.writerow(row)
         bucket.upload_file(filename, bucket_key)
-
-        print('S3 upload successful')
+        now = datetime.datetime.now().time()
+        print(f"{now}: S3 upload successful")
