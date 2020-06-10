@@ -1,3 +1,4 @@
+import datetime
 import re
 import string
 
@@ -41,6 +42,8 @@ class TweetCleaner:
                     cleaned_tokens.append(token.lower())
             all_cleaned_tokens.append(cleaned_tokens)
 
+        now = datetime.datetime.now().time()
+        print(f"{now}: Removed noise from tokens (lemm + stop words)")
         return all_cleaned_tokens
 
     def get_frequency_distribution(self, tokens):
