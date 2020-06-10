@@ -1,14 +1,31 @@
 import boto3
 import csv
+import os
+import pandas as pd
+
 
 class ImporterExporter:
 
     # Imports
+    def do_import(self, local: bool):
+        if local:
+            return self.local_import()
+        else:
+            return self.s3_import()
+
     def local_import(self):
-        pass
+        tweets = pd.read_csv(os.getenv('LOCAL_FILENAME'))
+        print('Local read successful')
+        return tweets
 
     def s3_import(self):
-        pass
+        s3 = boto3.client('s3')
+        bucket = os.getenv('BUCKET_NAME')
+        key = os.getenv('BUCKET_KEY')
+        obj = s3.get_object(Bucket=bucket, Key=key)
+        tweets = pd.read_csv(obj['Body'])
+        print('S3 read successful')
+        return tweets
 
     # Exports #
     def local_export(self, filename: str, header=[], data=[]):

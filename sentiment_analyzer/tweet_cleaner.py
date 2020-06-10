@@ -1,6 +1,7 @@
 import re
 import string
 
+from nltk import FreqDist
 from nltk.corpus import stopwords
 from nltk.tag import pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -41,3 +42,19 @@ class TweetCleaner:
             all_cleaned_tokens.append(cleaned_tokens)
 
         return all_cleaned_tokens
+
+    def get_frequency_distribution(self, tokens):
+        words = self.get_all_words(tokens)
+        return FreqDist(words)
+
+    def get_all_words(self, cleaned_tokens: list):
+        for tokens in cleaned_tokens:
+            for token in tokens:
+                yield token
+
+    def get_dataset_from_tokens(self, cleaned_tokens: list, tag: str):
+        dataset = []
+        for tweet_tokens in cleaned_tokens:
+            bag_of_tokens = {token: True for token in tweet_tokens}
+            dataset.append((bag_of_tokens, tag))
+        return dataset
