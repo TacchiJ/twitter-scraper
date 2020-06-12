@@ -9,7 +9,8 @@ from nltk.stem.wordnet import WordNetLemmatizer
 
 
 class TweetCleaner:
-    ''' Class for cleaning tweets.
+    '''
+    Class for cleaning tweets.
     
     :param lang: sets the language (e.g. for stop words)
     '''
@@ -19,7 +20,8 @@ class TweetCleaner:
         self.stop_words = stopwords.words(lang)
 
     def tokenize(self, strings: list):
-        '''Tokenizes provided strings
+        '''
+        Tokenizes provided strings
 
         :param strings: a list of strings to be tokenized
         :return: a list of lists of tokens
@@ -28,7 +30,8 @@ class TweetCleaner:
         pass
 
     def remove_noise(self, all_tweet_tokens: list):
-        '''Lemmatizes and removes stop words from a given list of tokens
+        '''
+        Lemmatizes and removes stop words from a given list of tokens
 
         :param all_tweet_tokens: a list of lists of tokens to be cleaned
         :return: a list of lists of cleaned tokens
@@ -73,7 +76,8 @@ class TweetCleaner:
                 yield token
 
     def get_dataset_from_tokens(self, cleaned_tokens: list, tag: str):
-        '''Transforms a list of tokens into required format for NLTK
+        '''
+        Transforms a list of tokens into required format for NLTK
         
         :param cleaned_tokens: a list of lists of cleaned tokens
         :param tag: group that the token belong to
