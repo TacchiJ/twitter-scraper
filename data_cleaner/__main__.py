@@ -61,8 +61,10 @@ if __name__ == "__main__":
     dataset = positive_dataset + negative_dataset
 
     # TF-IDF
+    # TODO
 
-    # TODO export dataset
-    now = datetime.datetime.now().time()
+    # Export dataset
+    path = os.getenv('LOCAL_FILEPATH')
+    now = datetime.datetime.now().date()
     header = ['foo', 'bar']
-    importer_exporter.local_export(f"cleaned_data_{now}", header=header, data=dataset)
+    importer_exporter.local_export(f"{path}cleaned_data_{now}.csv", header=header, data=dataset)
