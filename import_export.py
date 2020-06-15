@@ -13,8 +13,7 @@ class ImporterExporter:
 
     # Imports
     def do_import(self, local: bool):
-        '''
-        Imports data using locations and authorizations from .env file
+        '''Imports data using locations and authorizations from .env file
         
         :param local: imports local data if set to True, else imports from S3
         '''
@@ -43,8 +42,7 @@ class ImporterExporter:
 
     # Exports #
     def local_export(self, filename: str, header=[], data=[]):
-        '''
-        Exports data locally as a csv file
+        '''Exports data locally as a csv file
 
         :param filename: the name of the file to be output
         :param header: optional header for the file
@@ -60,8 +58,7 @@ class ImporterExporter:
         print(f"{now}: Local upload successful")
 
     def s3_export(self, filename: str, bucket_name: str, bucket_key:str, header=[], data=[]):
-        '''
-        Exports data as a csv file to an S3 bucket
+        '''Exports data as a csv file to an S3 bucket
 
         :param filename: the name of the file to be output
         :param bucket_name: name of the destination bucket

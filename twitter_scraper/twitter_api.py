@@ -43,8 +43,7 @@ class TwitterAPI:
         return self.tweet_contents
 
     async def get_tweets(self, queries, n=10, lang='en'):
-        '''
-        Returns n most recent tweets for each query
+        '''Returns n most recent tweets for each query
 
         :param queries: a list of strings to be searched for
         :param n: the number of tweets to be returned for each query
