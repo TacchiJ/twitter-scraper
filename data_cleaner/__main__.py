@@ -64,7 +64,6 @@ if __name__ == "__main__":
     # TODO
 
     # Export dataset
-    path = os.getenv('LOCAL_FILEPATH')
-    now = datetime.datetime.now().date()
+    path = f"{os.getenv('LOCAL_FILEPATH')}cleaned_data/"
     header = ['foo', 'bar']
-    importer_exporter.local_export(f"{path}cleaned_data_{now}.csv", header=header, data=dataset)
+    importer_exporter.local_export(f"{path}cleaned_data.csv", header=header, data=dataset)
