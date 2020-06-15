@@ -1,4 +1,4 @@
-import boto3
+import datetime
 import logging
 import nltk
 import os
@@ -7,7 +7,7 @@ import sys
 from nltk.corpus import twitter_samples
 
 sys.path.insert(1, '')
-from tweet_cleaner import TweetCleaner
+from data_cleaner.tweet_cleaner import TweetCleaner
 from import_export import ImporterExporter
 
 logger = logging.getLogger()
@@ -59,6 +59,10 @@ if __name__ == "__main__":
     positive_dataset = cleaner.get_dataset_from_tokens(positive_cleaned_tokens, "Positive")
     negative_dataset = cleaner.get_dataset_from_tokens(negative_cleaned_tokens, "Negative")
     dataset = positive_dataset + negative_dataset
-    # TODO export dataset
 
     # TF-IDF
+
+    # TODO export dataset
+    now = datetime.datetime.now().time()
+    header = ['foo', 'bar']
+    importer_exporter.local_export(f"cleaned_data_{now}", header=header, data=dataset)
