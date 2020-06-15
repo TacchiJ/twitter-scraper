@@ -67,4 +67,8 @@ env.bak/
 venv.bak/
 
 # Dev outputs
-dev_output/*
+dev_output/
+local_output/
+
+# Sphinx
+docs/*

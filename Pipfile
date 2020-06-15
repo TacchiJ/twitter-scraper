@@ -14,6 +14,9 @@ pandas = "*"
 boto3 = "*"
 spacy = "*"
 nltk = "*"
+sphinx = "*"
+sphinx-autodoc-typehints = "*"
+sphinx-rtd-theme = "*"
 
 [requires]
 python_version = "3.8"

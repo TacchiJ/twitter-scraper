@@ -9,15 +9,30 @@ from nltk.stem.wordnet import WordNetLemmatizer
 
 
 class TweetCleaner:
+    '''Class for cleaning tweets.
+    
+    :param lang: sets the language (e.g. for stop words)
+    '''
 
     def __init__(self, lang='english'):
         lang = lang.lower()
         self.stop_words = stopwords.words(lang)
 
     def tokenize(self, strings: list):
+        '''Tokenizes provided strings
+
+        :param strings: a list of strings to be tokenized
+        :return: a list of lists of tokens
+        '''
+        #TODO:
         pass
 
     def remove_noise(self, all_tweet_tokens: list):
+        '''Lemmatizes and removes stop words from a given list of tokens
+
+        :param all_tweet_tokens: a list of lists of tokens to be cleaned
+        :return: a list of lists of cleaned tokens
+        '''
         all_cleaned_tokens = []
 
         for tweet_tokens in all_tweet_tokens:
@@ -47,15 +62,23 @@ class TweetCleaner:
         return all_cleaned_tokens
 
     def get_frequency_distribution(self, tokens):
+        '''Returns the frequency distribution of provided tokens'''
         words = self.get_all_words(tokens)
         return FreqDist(words)
 
     def get_all_words(self, cleaned_tokens: list):
+        '''Returns a generator for the provided tokens'''
         for tokens in cleaned_tokens:
             for token in tokens:
                 yield token
 
     def get_dataset_from_tokens(self, cleaned_tokens: list, tag: str):
+        '''Transforms a list of tokens into required format for NLTK
+        
+        :param cleaned_tokens: a list of lists of cleaned tokens
+        :param tag: group that the token belong to
+        :return: list of bag of words and tag pairs 
+        '''
         dataset = []
         for tweet_tokens in cleaned_tokens:
             bag_of_tokens = {token: True for token in tweet_tokens}
