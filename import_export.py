@@ -55,7 +55,7 @@ class ImporterExporter:
             for row in data:
                 writer.writerow(row)
         now = datetime.datetime.now().time()
-        print(f"{now}: Local upload successful")
+        print(f"{now}: Local export successful")
 
     def s3_export(self, filename: str, bucket_name: str, bucket_key:str, header=[], data=[]):
         '''Exports data as a csv file to an S3 bucket
@@ -77,4 +77,4 @@ class ImporterExporter:
                 writer.writerow(row)
         bucket.upload_file(filename, bucket_key)
         now = datetime.datetime.now().time()
-        print(f"{now}: S3 upload successful")
+        print(f"{now}: S3 export successful")
