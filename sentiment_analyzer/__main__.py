@@ -5,7 +5,19 @@ from nltk import NaiveBayesClassifier
 
 
 if __name__ == '__main__':
+
     dataset = 'foo'
+
+    # TODO
+    # Import cleaned datasets
+    # Build model
+    # Export model
+
+    # In New File:
+        # Import Model
+        # Import recent Tweets
+        # Make predicitons
+
 
     ### ANALYSIS ###
     # Split data
