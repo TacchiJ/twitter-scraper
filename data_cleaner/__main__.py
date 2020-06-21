@@ -7,8 +7,8 @@ import sys
 from nltk.corpus import twitter_samples
 
 sys.path.insert(1, '')
-from data_cleaner.tweet_cleaner import TweetCleaner
-from import_export import ImporterExporter
+from tools.tweet_cleaner import TweetCleaner
+from tools.import_export import ImporterExporter
 
 logger = logging.getLogger()
 
@@ -29,6 +29,8 @@ if __name__ == "__main__":
     local = True if os.getenv('ENV') == 'dev' else False
     importer_exporter = ImporterExporter()
     tweets = importer_exporter.do_import(local)
+
+    print(tweets)
 
     # Test data
     # Get training data
@@ -65,5 +67,5 @@ if __name__ == "__main__":
 
     # Export dataset
     path = f"{os.getenv('LOCAL_FILEPATH')}cleaned_data/"
-    header = ['foo', 'bar']
+    header = ['bag of words', 'label']
     importer_exporter.local_export(f"{path}cleaned_data.csv", header=header, data=dataset)
